@@ -17,6 +17,7 @@ gt_stack* gt_stack_create(int max){
     out->elems = (void**)calloc(max, sizeof(void*));
     if(!out->elems) exit(GT_ERROR_OUTMEM);
 
+    if(max<=0) max = 16;
     out->max = max; out->index = 0;
     return out;
 }
