@@ -5,19 +5,19 @@
 #include <stdlib.h>
 #include "../include/gtstack.h"
 struct gt_stack{
-    int max;
+    size_t max;
     int index;
     void** elems;
 };
 
-gt_stack* gt_stack_create(int max){
+gt_stack* gt_stack_create(size_t max){
     gt_stack* out = (gt_stack*)malloc(sizeof(gt_stack));
     if(!out) exit(GT_ERROR_OUTMEM);
 
+    if(max<=0) max = 16;
     out->elems = (void**)calloc(max, sizeof(void*));
     if(!out->elems) exit(GT_ERROR_OUTMEM);
 
-    if(max<=0) max = 16;
     out->max = max; out->index = 0;
     return out;
 }
