@@ -6,7 +6,8 @@ add_library(${PROJECT_NAME} SHARED
         )
 set_target_properties(${PROJECT_NAME} PROPERTIES
         SOVERSION 0.0.1
-        PUBLIC_HEADER "include/gtstack.h;include/gttypes.h"
+        PUBLIC_HEADER "include/gtstack.h;\
+include/gttypes.h"
 	)
 configure_file(gtlib.pc.in gtlib.pc @ONLY)
 install(TARGETS gtlib
