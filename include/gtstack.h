@@ -9,12 +9,12 @@ extern "C" {
 #endif
 
 #include "gttypes.h"
-typedef struct gt_stack gt_stack;
+typedef struct GtStack GtStack;
 
-GT_API gt_stack* gt_stack_create(size_t);
-GT_API int gt_stack_push(gt_stack*, void*);
-GT_API int gt_stack_pop(gt_stack*, void**);
-GT_API void gt_stack_destroy(gt_stack**);
+GT_API GtStack* gt_stack_create(size_t);
+GT_API int gt_stack_push(GtStack*, void*);
+GT_API int gt_stack_pop(GtStack*, void**);
+GT_API void gt_stack_destroy(GtStack**);
 
 #ifdef __cplusplus
 }

@@ -3,7 +3,7 @@ set(CMAKE_INSTALL_PREFIX /usr)
 project(gtlib VERSION 0.0.1 LANGUAGES C)
 add_library(${PROJECT_NAME} SHARED
         src/gtstack.c
-        )
+		include/gttrie.h)
 set_target_properties(${PROJECT_NAME} PROPERTIES
         SOVERSION 0.0.1
         PUBLIC_HEADER "include/gtstack.h;include/gttypes.h"

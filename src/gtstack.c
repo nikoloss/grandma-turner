@@ -4,14 +4,14 @@
 
 #include <stdlib.h>
 #include "../include/gtstack.h"
-struct gt_stack{
+struct GtStack{
     size_t max;
     int index;
     void** elems;
 };
 
-gt_stack* gt_stack_create(size_t max){
-    gt_stack* out = (gt_stack*)malloc(sizeof(gt_stack));
+GtStack* gt_stack_create(size_t max){
+    GtStack* out = (GtStack*)malloc(sizeof(GtStack));
     if(!out) exit(GT_ERROR_OUTMEM);
 
     if(max<=0) max = 16;
@@ -22,23 +22,23 @@ gt_stack* gt_stack_create(size_t max){
     return out;
 }
 
-int gt_stack_push(gt_stack* in, void* data){
+int gt_stack_push(GtStack* in, void* data){
     if(in->index>=in->max) return GT_ERROR_FULL;
 
     in->elems[in->index++] = data;
     return GT_OK;
 }
 
-int gt_stack_pop(gt_stack* in, void** data){
+int gt_stack_pop(GtStack* in, void** data){
     if(in->index<=0) return GT_ERROR_EMPTY;
 
     *data = in->elems[--in->index];
     return GT_OK;
 }
 
-void gt_stack_destroy(gt_stack** in){
+void gt_stack_destroy(GtStack** in){
     if(*in){
-        gt_stack* stack = *in;
+        GtStack* stack = *in;
         free(stack->elems);
         free(stack);
         *in = NULL;
