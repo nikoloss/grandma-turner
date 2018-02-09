@@ -5,21 +5,25 @@
 #include <stdlib.h>
 #include "../include/gtstack.h"
 struct GtStack{
-    size_t max;
+    int max;
     int index;
     void** elems;
 };
 
-GtStack* gt_stack_create(size_t max){
+GtStack* gt_stack_create(int max){
     GtStack* out = (GtStack*)malloc(sizeof(GtStack));
     if(!out) exit(GT_ERROR_OUTMEM);
 
     if(max<=0) max = 16;
-    out->elems = (void**)calloc(max, sizeof(void*));
+    out->elems = (void**)calloc((size_t)max, sizeof(void*));
     if(!out->elems) exit(GT_ERROR_OUTMEM);
 
     out->max = max; out->index = 0;
     return out;
+}
+
+int gt_stack_counts(GtStack* in){
+    return in->index;
 }
 
 int gt_stack_push(GtStack* in, void* data){
