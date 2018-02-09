@@ -8,9 +8,9 @@
 typedef struct GtTrieNode GtTrieNode;
 
 struct GtTrieNode{
-    unsigned int ref;
-    GtTrieValue data;
-    GtTrieNode* nodes[GTMAXCHAR];
+    unsigned int ref; //引用计数器
+    GtTrieValue data; //数据域
+    GtTrieNode* nodes[GTMAXCHAR]; //子节点
 };
 
 struct GtTrie{
@@ -30,6 +30,9 @@ long gt_trie_counts(GtTrie* trie){
     return trie->counts;
 }
 
+/*
+ * 节点查询
+ */
 static GtTrieNode* gt_trie_node_find(GtTrie* trie, char* key){
     char *p = key;
     unsigned int c;
@@ -45,6 +48,11 @@ static GtTrieNode* gt_trie_node_find(GtTrie* trie, char* key){
     }
 }
 
+/*
+ * 思路是先查询节点，但是查询到的节点不一样有数据比如我有key值为abcd的节点
+ * 第一层的节点是a，但是a这个节点并没有实际数值，包括a的子节点b，层层递进
+ * 到d的时候才有数据
+ */
 int gt_trie_find(GtTrie* trie, char* key, GtTrieValue* value){
     GtTrieNode* node = gt_trie_node_find(trie, key);
     if(node&&node->data){
@@ -54,6 +62,10 @@ int gt_trie_find(GtTrie* trie, char* key, GtTrieValue* value){
     return GT_ERROR_EMPTY;
 }
 
+/*
+ * 插入就是根据key字符层层递进下去直到key结尾，此时把value更新到节点的
+ * 数据域
+ */
 int gt_trie_insert(GtTrie* trie, char* key, GtTrieValue value){
     if(!value) return GT_ERROR_EMPTY;
 
@@ -86,7 +98,7 @@ int gt_trie_insert(GtTrie* trie, char* key, GtTrieValue value){
     return GT_OK;
 }
 
-/**
+/*
  * 删除不能单纯的find，free，比如“abcde”和“abcdf”
  * 删除其中abcde可不能把沿途的abcd节点全部删除，否则
  * 就不能访问abcdf了，free的逻辑类似insert，只不过在
@@ -113,20 +125,33 @@ int gt_trie_remove(GtTrie* trie, char* key){
     return GT_OK;
 }
 
-static void gt_trie_node_travel(GtTrieNode* node, void(*traveller)(GtTrieValue), unsigned int depth){
+/*
+ * 从某个节点开始遍历，depth为剩余遍历深度
+ */
+static void gt_trie_node_travel(GtTrieNode* node,
+                                void(*traveller)(GtTrieValue),
+                                unsigned int depth){
     if(!node) return;
     if(depth<=0) return;
     if(node->data){
+        //call back
         traveller(node->data);
     }
     GtTrieNode** rover = node->nodes;
     depth--;
     for(int i=0;i<GTMAXCHAR;i++){
+        //把这一层全部遍历一遍
         gt_trie_node_travel(rover[i], traveller, depth);
     }
 }
 
-void gt_trie_travel(GtTrie* trie, char* key, void(*traveller)(GtTrieValue), unsigned int depth){
+/*
+ * 先根据key找到节点，再从这个节点开始遍历
+ */
+void gt_trie_travel(GtTrie* trie,
+                    char* key,
+                    void(*traveller)(GtTrieValue),
+                    unsigned int depth){
     char* p = key;
     unsigned int c;
     GtTrieNode* node = trie->root;
@@ -143,8 +168,9 @@ void gt_trie_travel(GtTrie* trie, char* key, void(*traveller)(GtTrieValue), unsi
 
 static void gt_trie_node_destroy(GtTrieNode *node){
     if(!node) return;
+    //把子节点保存下来，免得把父节点free掉了就访问不到了
     GtTrieNode** rover = node->nodes;
-    free(node);
+    free(node); //free掉父节点
 
     for(int i=0;i<GTMAXCHAR;i++){
         gt_trie_node_destroy(rover[i]);
