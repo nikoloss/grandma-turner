@@ -6,8 +6,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <gt/gtstack.h>
+#ifdef DEBUG
+#include "../../include/gttrie.h"
+#include "../../include/gtstack.h"
+#else
 #include <gt/gttrie.h>
+#include <gt/gtstack.h>
+
+#endif
+#include <mcheck.h>
+
+#define WORDLEN (16)
 
 GtStack* stack = NULL;  //栈，全局变量
 
@@ -17,6 +26,10 @@ GtStack* stack = NULL;  //栈，全局变量
 void travel(GtTrieValue value){
     gt_stack_push(stack, value);
 }
+
+void travel_free(GtTrieValue value){
+    free(value);
+}
 /*
  * 抓取候选词的思路是这样：
  * 首先让我们假设word为“hella”
@@ -25,7 +38,7 @@ void travel(GtTrieValue value){
  * 比较高的单词。
  */
 void fetch_candidate_words(GtTrie* trie, GtStack* stack, char* word){
-    char *p = (char*)calloc(64, sizeof(char));
+    char *p = (char*)calloc(WORDLEN, sizeof(char));
     strncpy(p, word, strlen(word));
     int depth;
     for(;;) {
@@ -53,7 +66,7 @@ void words_training(GtTrie* trie, FILE* fp){
         if(c==EOF) return;
     }
     //剩下来的都是合法字符
-    char* word = (char*)calloc(64, sizeof(char));
+    char* word = (char*)calloc(WORDLEN, sizeof(char));
     char* p = word;
     while(isalpha(c)) {
         *p++ = c;
@@ -61,11 +74,18 @@ void words_training(GtTrie* trie, FILE* fp){
     }
     //单词结尾！
 //    printf("training:%s\n", word);
+    char*tmp;
+    int err;
+    if((err = gt_trie_find(trie, word, (GtTrieValue*)&tmp))==GT_OK){
+        //如果已经存在此节点则free掉
+        free(tmp);
+    }
     gt_trie_insert(trie, word, word); //插入
     words_training(trie, fp); //继续整个过程直到fp被耗尽
 }
 
 int main(int argc, char* argv[]){
+    mtrace();
     stack = gt_stack_create(10);
     GtTrie* trie = gt_trie_create();
     char** tmp = argv;
@@ -76,12 +96,13 @@ int main(int argc, char* argv[]){
     char* filename = argv[1];
     FILE* fp = fopen(filename, "r");
     words_training(trie, fp); //训练trie树之后就可以拿来做功能了
-
+    printf("total words: %ld\n", gt_trie_counts(trie));
+    fclose(fp);
     char in[64]; char* p;
     int err;
     int esc = 0;
     while(!esc) {
-        printf("LOOK FOR? /> ");
+        printf("looking for ? /> ");
         scanf("%s", in); //读入输入的字符串
         if(!strcmp(in, "?esc")){ //如果用户输入了“?ecs”则退出该程序
             esc = 1;
@@ -102,6 +123,7 @@ int main(int argc, char* argv[]){
     }
     printf("bye bye!\n");
     //擦屁股，remember always 擦屁股
+    gt_trie_travel(trie, "", travel_free, WORDLEN+1);
     gt_trie_destroy(&trie);
     gt_stack_destroy(&stack);
     return EXIT_SUCCESS;

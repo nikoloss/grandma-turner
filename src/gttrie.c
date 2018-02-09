@@ -79,6 +79,7 @@ int gt_trie_insert(GtTrie* trie, char* key, GtTrieValue value){
         node->data = value;
         return GT_OK;
     }
+    trie->counts++;
 
     for(;;){
         if(!(*rover)){
@@ -103,7 +104,8 @@ int gt_trie_insert(GtTrie* trie, char* key, GtTrieValue value){
  * 删除其中abcde可不能把沿途的abcd节点全部删除，否则
  * 就不能访问abcdf了，free的逻辑类似insert，只不过在
  * 向下遍历的时候对每个节点进行引用计数器减一的操作，
- * 并把引用计数器为0的free掉。
+ * 并把引用计数器为0的free掉。这里也显示出c/c++对内存
+ * 外科手术刀式的精准操作，真是魅力无穷呀
  */
 int gt_trie_remove(GtTrie* trie, char* key){
     char* p = key;
@@ -111,7 +113,7 @@ int gt_trie_remove(GtTrie* trie, char* key){
     GtTrieNode** rover = &trie->root;
     GtTrieNode* node = gt_trie_node_find(trie, key);
     if(!node) return GT_ERROR_EMPTY;
-
+    trie->counts--;
     for(;;){
         if(--(*rover)->ref==0){
             free(*rover);
