@@ -9,12 +9,13 @@
 #ifdef DEBUG
 #include "../../include/gttrie.h"
 #include "../../include/gtstack.h"
+#include <mcheck.h>
 #else
 #include <gt/gttrie.h>
 #include <gt/gtstack.h>
 
 #endif
-#include <mcheck.h>
+
 
 #define WORDLEN (16)
 
@@ -85,7 +86,9 @@ void words_training(GtTrie* trie, FILE* fp){
 }
 
 int main(int argc, char* argv[]){
+#ifdef DEBUG
     mtrace();
+#endif
     stack = gt_stack_create(10);
     GtTrie* trie = gt_trie_create();
     char** tmp = argv;
