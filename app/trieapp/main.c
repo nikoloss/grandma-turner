@@ -4,7 +4,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <mcheck.h>
 #include <string.h>
 #include <ctype.h>
 #include <gt/gtstack.h>
@@ -67,8 +66,6 @@ void words_training(GtTrie* trie, FILE* fp){
 }
 
 int main(int argc, char* argv[]){
-    mtrace();
-
     stack = gt_stack_create(10);
     GtTrie* trie = gt_trie_create();
     char** tmp = argv;
