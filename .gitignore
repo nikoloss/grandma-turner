@@ -1,4 +1,5 @@
 *.gch
-*.out
+*.out*
 *~
 build/*
+.DS_Store

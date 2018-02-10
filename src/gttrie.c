@@ -135,11 +135,12 @@ static void gt_trie_node_travel(GtTrieNode* node,
                                 unsigned int depth){
     if(!node) return;
     if(depth<=0) return;
+    GtTrieNode** rover = node->nodes;
     if(node->data){
         //call back
         traveller(node->data);
     }
-    GtTrieNode** rover = node->nodes;
+
     depth--;
     for(int i=0;i<GTMAXCHAR;i++){
         //把这一层全部遍历一遍
@@ -169,13 +170,14 @@ void gt_trie_travel(GtTrie* trie,
 }
 
 static void gt_trie_node_destroy(GtTrieNode *node){
-    if(!node) return;
     //把子节点保存下来，免得把父节点free掉了就访问不到了
     GtTrieNode** rover = node->nodes;
     free(node); //free掉父节点
 
     for(int i=0;i<GTMAXCHAR;i++){
-        gt_trie_node_destroy(rover[i]);
+        if(rover[i]){
+            gt_trie_node_destroy(rover[i]);
+        }
     }
 }
 
