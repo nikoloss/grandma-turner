@@ -6,7 +6,7 @@
 #include "../include/gtstack.h"
 struct GtStack{
     int max;
-    int index;
+    unsigned int index;
     void** elems;
 };
 

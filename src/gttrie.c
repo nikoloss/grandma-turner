@@ -14,7 +14,7 @@ struct GtTrieNode{
 };
 
 struct GtTrie{
-    long counts;
+    unsigned long counts;
     GtTrieNode* root;
 };
 
