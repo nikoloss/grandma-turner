@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.7)
-set(CMAKE_INSTALL_PREFIX /usr)
+#set(CMAKE_INSTALL_PREFIX /usr)
 project(gtlib VERSION 0.0.1 LANGUAGES C)
 add_library(${PROJECT_NAME} SHARED
         src/gtstack.c
