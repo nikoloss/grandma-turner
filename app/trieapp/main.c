@@ -59,32 +59,34 @@ void fetch_candidate_words(GtTrie* trie, GtStack* stack, char* word){
  */
 void words_training(GtTrie* trie, FILE* fp){
     int c = fgetc(fp);
-    if(c==EOF) return;
-    while(!isalpha(c)){
-        c = fgetc(fp);
-        if(c==EOF) return;
-    }
-    //剩下来的都是合法字符
-    if(!word){
-        word = (char*)malloc(WORDLEN*sizeof(char));
-    }
-    if(!word)exit(-3);
-    char* p = word;
-    while(isalpha(c)) {
-        *p++ = c;
-        c = fgetc(fp);
-    }
-    //单词结尾！
-    char*tmp;
     int err;
-    if  ((err = gt_trie_find(trie, word, (GtTrieValue*)&tmp))==GT_OK){
-        //如果已经存在此单词 直接清零
-        memset(word, '\0', WORDLEN);
-    }else{
-        gt_trie_insert(trie, word, word); //插入
-        word=NULL;
+    char* p;
+    char* tmp;
+    while(c!=EOF){
+        //跳过非字符
+        while(!isalpha(c)){
+            c = fgetc(fp);
+            if(c==EOF)return;
+        }
+        //剩下的就是字符了
+        if(!word){
+            word = (char*)calloc(WORDLEN, sizeof(char));
+            if(!word) exit(-3);
+        }
+        p = word;
+        while(isalpha(c)){
+            *p++ = c;
+            c = fgetc(fp);
+        }
+        if((err=gt_trie_find(trie, word, (GtTrieValue*)&tmp))==GT_OK){
+            //如果trie中已经存在这个单词，就清零，下一次好废物利用不用
+            //重复申请内存
+            memset(word, '\0', WORDLEN);
+        }else{
+            gt_trie_insert(trie, word, word);
+            word = NULL;//这个标记用来检查需不需要重新申请内存
+        }
     }
-    words_training(trie, fp); //继续整个过程直到fp被耗尽
 }
 
 int main(int argc, char* argv[]){
