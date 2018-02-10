@@ -83,8 +83,10 @@ int gt_trie_insert(GtTrie* trie, char* key, GtTrieValue value){
 
     for(;;){
         if(!(*rover)){
-            *rover = (GtTrieNode*)malloc(sizeof(GtTrieNode));
-            (*rover)->ref = 0; (*rover)->data = NULL;
+            node = (GtTrieNode*)malloc(sizeof(GtTrieNode));
+            if(!node) exit(GT_ERROR_OUTMEM);
+            node->ref = 0; node->data = NULL;
+            *rover = node;
         }
         //增加引用计数器
         (*rover)->ref++;
@@ -172,13 +174,13 @@ void gt_trie_travel(GtTrie* trie,
 static void gt_trie_node_destroy(GtTrieNode *node){
     //把子节点保存下来，免得把父节点free掉了就访问不到了
     GtTrieNode** rover = node->nodes;
-    free(node); //free掉父节点
-
+    //*rover = NULL;
     for(int i=0;i<GTMAXCHAR;i++){
         if(rover[i]){
             gt_trie_node_destroy(rover[i]);
         }
     }
+    free(node);
 }
 
 void gt_trie_destroy(GtTrie** in){

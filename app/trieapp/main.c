@@ -1,7 +1,6 @@
 //
 // Created by rowland on 18-2-8.
 //
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,11 +15,10 @@
 
 #endif
 
-
-#define WORDLEN (16)
-
+//单词长度
+#define WORDLEN (32)
 GtStack* stack = NULL;  //栈，全局变量
-
+char* word;
 /*
  * 回调函数，将找到的值压栈
  */
@@ -67,21 +65,25 @@ void words_training(GtTrie* trie, FILE* fp){
         if(c==EOF) return;
     }
     //剩下来的都是合法字符
-    char* word = (char*)calloc(WORDLEN, sizeof(char));
+    if(!word){
+        word = (char*)malloc(WORDLEN*sizeof(char));
+    }
+    if(!word)exit(-3);
     char* p = word;
     while(isalpha(c)) {
         *p++ = c;
         c = fgetc(fp);
     }
     //单词结尾！
-//    printf("training:%s\n", word);
     char*tmp;
     int err;
-    if((err = gt_trie_find(trie, word, (GtTrieValue*)&tmp))==GT_OK){
-        //如果已经存在此节点则free掉
-        free(tmp);
+    if  ((err = gt_trie_find(trie, word, (GtTrieValue*)&tmp))==GT_OK){
+        //如果已经存在此单词 直接清零
+        memset(word, '\0', WORDLEN);
+    }else{
+        gt_trie_insert(trie, word, word); //插入
+        word=NULL;
     }
-    gt_trie_insert(trie, word, word); //插入
     words_training(trie, fp); //继续整个过程直到fp被耗尽
 }
 
