@@ -1,14 +1,15 @@
 cmake_minimum_required(VERSION 3.7)
 #set(CMAKE_INSTALL_PREFIX /usr)
+
+set(SOURCE_FILES src/gtstack.c src/gttrie.c)
+set(HEADER_FILES include/gttypes.h include/gtstack.h include/gttrie.h)
 project(gtlib VERSION 0.0.1 LANGUAGES C)
 add_library(${PROJECT_NAME} SHARED
         src/gtstack.c
 		src/gttrie.c)
 set_target_properties(${PROJECT_NAME} PROPERTIES
         SOVERSION 0.0.1
-        PUBLIC_HEADER "include/gtstack.h;\
-include/gttypes.h;\
-include/gttrie.h"
+        PUBLIC_HEADER ${HEADER_FILES}
 	)
 configure_file(gtlib.pc.in gtlib.pc @ONLY)
 install(TARGETS gtlib

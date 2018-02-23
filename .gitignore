@@ -1,5 +1,10 @@
 *.gch
 *.out*
+*.log
+*.txt
+.idea
+*-debug
+*.o
 *~
 build/*
 .DS_Store
