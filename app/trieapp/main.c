@@ -93,13 +93,14 @@ int main(int argc, char* argv[]){
 #ifdef DEBUG
     mtrace();
 #endif
-    stack = gt_stack_create(10);
-    GtTrie* trie = gt_trie_create();
     char** tmp = argv;
     if(argc < 2){
         printf("usage:%s {file}\n", argv[0]);
         return EXIT_FAILURE;
     }
+
+    stack = gt_stack_create(10);
+    GtTrie* trie = gt_trie_create();
     char* filename = argv[1];
     FILE* fp = fopen(filename, "r");
     words_training(trie, fp); //训练trie树之后就可以拿来做功能了
