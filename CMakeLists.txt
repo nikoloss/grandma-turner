@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.7)
-#set(CMAKE_INSTALL_PREFIX /usr)
 
 set(SOURCE_FILES src/gtstack.c src/gttrie.c)
 set(HEADER_FILES include/gttypes.h include/gtstack.h include/gttrie.h)
@@ -18,3 +17,12 @@ install(TARGETS gtlib
         )
 install(FILES ${CMAKE_BINARY_DIR}/gtlib.pc
         DESTINATION lib/pkgconfig)
+
+find_package(PkgConfig)
+pkg_check_modules(TESTUNIT criterion)
+
+if (TESTUNIT_FOUND)
+    enable_testing()
+    message("-- be ready to run test case, usage: make && make test")
+    add_subdirectory(test)
+endif (TESTUNIT_FOUND)

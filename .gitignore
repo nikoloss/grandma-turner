@@ -1,7 +1,6 @@
 *.gch
 *.out*
 *.log
-*.txt
 .idea
 *-debug
 *.o

@@ -99,10 +99,15 @@ int main(int argc, char* argv[]){
         return EXIT_FAILURE;
     }
 
-    stack = gt_stack_create(10);
-    GtTrie* trie = gt_trie_create();
     char* filename = argv[1];
     FILE* fp = fopen(filename, "r");
+    if(!fp){
+        printf("%s not exists", filename);
+        return EXIT_FAILURE;
+    }
+
+    stack = gt_stack_create(10);
+    GtTrie* trie = gt_trie_create();
     words_training(trie, fp); //训练trie树之后就可以拿来做功能了
     printf("total words: %ld\n", gt_trie_counts(trie));
     fclose(fp);
