@@ -19,10 +19,13 @@ install(FILES ${CMAKE_BINARY_DIR}/gtlib.pc
         DESTINATION lib/pkgconfig)
 
 find_package(PkgConfig)
-pkg_check_modules(TESTUNIT criterion)
+pkg_check_modules(UNITTEST criterion)
 
-if (TESTUNIT_FOUND)
+if (UNITTEST_FOUND)
+    set(UNITTEST_SOURCE test/test_gtstack.c test/test_gttrie.c)
     enable_testing()
     message("-- be ready to run test case, usage: make && make test")
-    add_subdirectory(test)
-endif (TESTUNIT_FOUND)
+    add_executable(runtest ${UNITTEST_SOURCE} ${HEADER_FILES} ${SOURCE_FILES})
+    target_link_libraries(runtest ${UNITTEST_LIBRARIES})
+    add_test(runtest runtest)
+endif (UNITTEST_FOUND)
