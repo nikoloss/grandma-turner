@@ -1,4 +1,4 @@
-//
+// test_gtstack.c
 // Created by rowland on 18-3-14.
 //
 
@@ -6,7 +6,7 @@
 #include "../include/gttypes.h"
 #include "../include/gtstack.h"
 
-Test(gtstack, test){
+Test(gtstack, test_create_destroy){
     GtStack* stack = gt_stack_create(10);
     cr_assert(stack!=NULL, "oops!!!");
     gt_stack_destroy(&stack);
