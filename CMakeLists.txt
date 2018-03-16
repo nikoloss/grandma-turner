@@ -25,7 +25,7 @@ pkg_check_modules(UNITTEST criterion)
 
 #如果成功获取criterion说明机器是安装了criterion
 if (UNITTEST_FOUND)
-    SET(CMAKE_BUILD_TYPE "Debug")
+#    SET(CMAKE_BUILD_TYPE "Debug") #if you debug with gdb
     #设置单元测试的源码目录
     set(UNITTEST_SOURCE test/test_gtstack.c test/test_gttrie.c)
     #打开cmake测试编译
