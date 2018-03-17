@@ -3,30 +3,42 @@ If it rains today, something something remain
 
 
 ### How to use
-#### Linux & Mac:
+#### Install in Linux & Mac:
 ```bash
 $/> mkdir build
 $/> cd build
 $/> cmake ..
 $/> make
+$/> make test
 $/> sudo make install
 ```
 then you will have gtlib in your system
-### Demo app
-#### after installed gtlib
-##### trieapp:
-```bash
-$/> cd app/trieapp
-$/> gcc main.c `pkg-config --cflags --libs gtlib`
-$/> ./a.out data.txt
-LOOK FOR? /> di
-Not found but I have 3 candidates
-	dispensed
-	discover
-	directly
-LOOK FOR? /> this
-found it! this
-LOOK FOR? /> ?esc
-bye bye!
-$/>
+#### Getting start
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <gt/gtstack.h>
+
+int main(){
+    GtStack* stack = gt_stack_create(10);
+    gt_stack_push(stack, "顺丰");
+    gt_stack_push(stack, "韵达");
+    gt_stack_push(stack, "申通");
+    gt_stack_push(stack, "圆通");
+    char* p;
+    int err;
+    while((err=gt_stack_pop(stack, (void**)&p))==GT_OK){
+        printf("pop:%s\n", p);
+    }
+    gt_stack_destroy(&stack);
+    return EXIT_SUCCESS;
+}
 ```
+#### compile
+```bash
+$ />clang main.c `pkg-config --cflags --libs gtlib`
+```
+
+
+### Demo app
+[Dictionary](./app/trieapp/readme.md)
