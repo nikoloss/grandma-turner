@@ -3,7 +3,7 @@ If it rains today, something something remain
 
 
 ### How to use
-#### Linux:
+#### Linux & Mac:
 ```bash
 $/> mkdir build
 $/> cd build
