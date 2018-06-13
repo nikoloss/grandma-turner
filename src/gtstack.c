@@ -7,7 +7,7 @@
 struct GtStack{
     int max;
     unsigned int index;
-    void** elems;
+    GtValue* elems;
 };
 
 GtStack* gt_stack_create(int max){
@@ -26,17 +26,22 @@ int gt_stack_counts(GtStack* in){
     return in->index;
 }
 
-int gt_stack_push(GtStack* in, void* data){
+int gt_stack_push(GtStack* in, GtValue data){
     if(in->index>=in->max) return GT_ERROR_FULL;
 
     in->elems[in->index++] = data;
     return GT_OK;
 }
 
-int gt_stack_pop(GtStack* in, void** data){
+int gt_stack_pop(GtStack* in, GtValue* data){
     if(in->index<=0) return GT_ERROR_EMPTY;
 
     *data = in->elems[--in->index];
+    return GT_OK;
+}
+
+int gt_stack_clear(GtStack* in){
+    in->index = 0;
     return GT_OK;
 }
 

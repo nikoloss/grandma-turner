@@ -6,9 +6,64 @@
 #include "../include/gttypes.h"
 #include "../include/gtstack.h"
 
-Test(gtstack, test_create_destroy){
-    GtStack* stack = gt_stack_create(10);
-    cr_assert(stack!=NULL, "oops!!!");
-    gt_stack_destroy(&stack);
-    cr_assert(stack==NULL, "");
+GtStack* gtStack = NULL;
+
+void gtstack_setup(void){
+    gtStack = gt_stack_create(3);
 }
+
+void gtstack_teardown(void){
+    gt_stack_destroy(&gtStack);
+}
+
+TestSuite(GtStack, .init=gtstack_setup, .fini=gtstack_teardown);
+
+Test(GtStack, initialized){
+    cr_assert(gtStack, "initialized failed");
+}
+
+Test(GtStack, counts){
+    cr_assert_eq(gt_stack_counts(gtStack), 0, "counts");
+    int err;
+    err = gt_stack_push(gtStack, "托尔斯泰");
+    cr_assert_eq(gt_stack_counts(gtStack), 1, "counts");
+    err = gt_stack_push(gtStack, "甘地");
+    cr_assert_eq(gt_stack_counts(gtStack), 2, "counts");
+    err = gt_stack_push(gtStack, "泰勒");
+    cr_assert_eq(gt_stack_counts(gtStack), 3, "counts");
+}
+
+Test(GtStack, overflow){
+    cr_assert_eq(gt_stack_counts(gtStack), 0, "counts");
+    int err;
+    char* vars[] = {"today","is","a"};
+    for(int i=0;i<3;i++){
+        gt_stack_push(gtStack, vars[i]);
+        cr_assert_eq(gt_stack_counts(gtStack), i+1, "unexpected counts %d", i+1);
+    }
+    err = gt_stack_push(gtStack, "overflow");
+    cr_assert_eq(err, GT_ERROR_FULL, "overflow");
+}
+
+Test(GtStack, empty){
+    cr_assert_eq(gt_stack_counts(gtStack), 0, "counts");
+    int err;
+    cr_expect_eq(gt_stack_counts(gtStack), 0, "0 is expected");
+    GtValue var;
+    err = gt_stack_pop(gtStack, &var);
+    cr_assert_eq(err, GT_ERROR_EMPTY, "empty");
+}
+
+Test(GtStack, store){
+    cr_assert_eq(gt_stack_counts(gtStack), 0, "counts");
+    int err;
+    GtValue var;
+    char* vars[] = {"this", "is", "sunny"};
+    for(int i=0;i<3;i++){
+        gt_stack_push(gtStack, vars[i]);
+    }
+    err = gt_stack_pop(gtStack, &var);
+    cr_expect_eq(err, GT_OK, "%d is expected while inserting but got %d", GT_OK, err);
+    cr_assert(!strcmp((char*)var, "sunny"), "\"sunny\" is expected but got \"%s\"", (char*)var);
+}
+

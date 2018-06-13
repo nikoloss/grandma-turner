@@ -17,6 +17,9 @@ extern "C" {
 
 #define GTMAXCHAR         (2<<7)
 
+
+typedef void* GtValue;
+
 #ifdef __cplusplus
 }
 #endif

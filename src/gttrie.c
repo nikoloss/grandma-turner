@@ -9,7 +9,7 @@ typedef struct GtTrieNode GtTrieNode;
 
 struct GtTrieNode{
     unsigned int ref; //引用计数器
-    GtTrieValue data; //数据域
+    GtValue data; //数据域
     GtTrieNode* nodes[GTMAXCHAR]; //子节点
 };
 
@@ -53,7 +53,7 @@ static GtTrieNode* gt_trie_node_find(GtTrie* trie, char* key){
  * 第一层的节点是a，但是a这个节点并没有实际数值，包括a的子节点b，层层递进
  * 到d的时候才有数据
  */
-int gt_trie_find(GtTrie* trie, char* key, GtTrieValue* value){
+int gt_trie_find(GtTrie* trie, char* key, GtValue* value){
     GtTrieNode* node = gt_trie_node_find(trie, key);
     if(node&&node->data){
         *value = node->data;
@@ -66,7 +66,7 @@ int gt_trie_find(GtTrie* trie, char* key, GtTrieValue* value){
  * 插入就是根据key字符层层递进下去直到key结尾，此时把value更新到节点的
  * 数据域
  */
-int gt_trie_insert(GtTrie* trie, char* key, GtTrieValue value){
+int gt_trie_insert(GtTrie* trie, char* key, GtValue value){
     if(!value) return GT_ERROR_EMPTY;
 
     char* p = key;
@@ -133,7 +133,7 @@ int gt_trie_remove(GtTrie* trie, char* key){
  * 从某个节点开始遍历，depth为剩余遍历深度
  */
 static void gt_trie_node_travel(GtTrieNode* node,
-                                void(*traveller)(GtTrieValue),
+                                void(*traveller)(GtValue),
                                 unsigned int depth){
     if(!node) return;
     if(depth<=0) return;
@@ -155,7 +155,7 @@ static void gt_trie_node_travel(GtTrieNode* node,
  */
 void gt_trie_travel(GtTrie* trie,
                     char* key,
-                    void(*traveller)(GtTrieValue),
+                    void(*traveller)(GtValue),
                     unsigned int depth){
     char* p = key;
     unsigned int c;
