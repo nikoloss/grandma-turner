@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.7)
 
 set(SOURCE_FILES src/gtstack.c src/gttrie.c)
-set(HEADER_FILES include/gttypes.h include/gtstack.h include/gttrie.h)
+set(HEADER_FILES include/gtstack.h include/gttrie.h include/gttypes.h)
 project(gtlib VERSION 0.0.1 LANGUAGES C)
 add_library(${PROJECT_NAME} SHARED
         src/gtstack.c
 		src/gttrie.c)
 set_target_properties(${PROJECT_NAME} PROPERTIES
         SOVERSION 0.0.1
-        PUBLIC_HEADER ${HEADER_FILES}
+        PUBLIC_HEADER "${HEADER_FILES}"
 	)
 configure_file(gtlib.pc.in gtlib.pc @ONLY)
 install(TARGETS gtlib
@@ -26,7 +26,7 @@ if (UNITTEST_FOUND)
     set(CMAKE_BUILD_TYPE Debug)
     enable_testing()
     #设置单元测试的源码目录
-    set(UNITTEST_SOURCE  test/test_gttrie.c)
+    set(UNITTEST_SOURCE  test/test_gttrie.c test/test_gtstack.c)
     #打印一些信息 提示用户在make之后执行make test就是单元测试
     message("-- be ready to run test case, usage: make && make test")
     #把所有的测试源码编译成可执行文件runtest

@@ -43,7 +43,7 @@ static GtTrieNode* gt_trie_node_find(GtTrie* trie, char* key){
             return node;
         }
         c = (int)*p;
-        c += 127;
+        c += 128;
         node = node->nodes[c];
         p++;
     }
@@ -92,7 +92,7 @@ int gt_trie_insert(GtTrie* trie, char* key, GtValue value){
         //增加引用计数器
         (*rover)->ref++;
         c = (int)*p;
-        c += 127;
+        c += 128;
         if(*p == '\0'){
             (*rover)->data = value;
             break;
@@ -124,7 +124,7 @@ int gt_trie_remove(GtTrie* trie, char* key){
             *rover = NULL;
         }
         c = (int)*p;
-        c += 127;
+        c += 128;
         if(*p=='\0') break;
         rover = &(*rover)->nodes[c];
         p++;
@@ -166,7 +166,7 @@ void gt_trie_travel(GtTrie* trie,
     if(!node) return;
     while(*p!='\0'){
         c = (int) *p;
-        c += 127;
+        c += 128;
         node = node->nodes[c];
         if(!node) return;
         depth--;

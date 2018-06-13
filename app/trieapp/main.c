@@ -10,23 +10,24 @@
 #include "../../include/gtstack.h"
 #include <mcheck.h>
 #else
+#include <gt/gttypes.h>
 #include <gt/gttrie.h>
 #include <gt/gtstack.h>
 
 #endif
 
 //单词长度
-#define WORDLEN (32)
+#define WORDLEN (128)
 GtStack* stack = NULL;  //栈，全局变量
 char* word;
 /*
  * 回调函数，将找到的值压栈
  */
-void travel(GtTrieValue value){
+void travel(GtValue value){
     gt_stack_push(stack, value);
 }
 
-void travel_free(GtTrieValue value){
+void travel_free(GtValue value){
     free(value);
 }
 /*
@@ -64,7 +65,7 @@ void words_training(GtTrie* trie, FILE* fp){
     char* tmp;
     while(c!=EOF){
         //跳过非字符
-        while(!isalpha(c)){
+        while(isspace(c)){
             c = fgetc(fp);
             if(c==EOF)return;
         }
@@ -74,11 +75,11 @@ void words_training(GtTrie* trie, FILE* fp){
             if(!word) exit(-3);
         }
         p = word;
-        while(isalpha(c)){
+        while(!isspace(c)){
             *p++ = c;
             c = fgetc(fp);
         }
-        if((err=gt_trie_find(trie, word, (GtTrieValue*)&tmp))==GT_OK){
+        if((err=gt_trie_find(trie, word, (GtValue*)&tmp))==GT_OK){
             //如果trie中已经存在这个单词，就清零，下一次好废物利用不用
             //重复申请内存
             memset(word, '\0', WORDLEN);
