@@ -35,14 +35,15 @@ long gt_trie_counts(GtTrie* trie){
  */
 static GtTrieNode* gt_trie_node_find(GtTrie* trie, char* key){
     char *p = key;
-    unsigned int c;
+    int c;
     GtTrieNode* node = trie->root;
     for(;;){
         if(!node) return NULL;
         if(*p=='\0'){
             return node;
         }
-        c = (unsigned int)*p;
+        c = (int)*p;
+        c += 127;
         node = node->nodes[c];
         p++;
     }
@@ -70,7 +71,7 @@ int gt_trie_insert(GtTrie* trie, char* key, GtValue value){
     if(!value) return GT_ERROR_EMPTY;
 
     char* p = key;
-    unsigned int c;
+    int c;
     GtTrieNode** rover = &trie->root;
     //查查是否已经存在这个节点
     GtTrieNode* node = gt_trie_node_find(trie, key);
@@ -90,7 +91,8 @@ int gt_trie_insert(GtTrie* trie, char* key, GtValue value){
         }
         //增加引用计数器
         (*rover)->ref++;
-        c = (unsigned int)*p;
+        c = (int)*p;
+        c += 127;
         if(*p == '\0'){
             (*rover)->data = value;
             break;
@@ -111,7 +113,7 @@ int gt_trie_insert(GtTrie* trie, char* key, GtValue value){
  */
 int gt_trie_remove(GtTrie* trie, char* key){
     char* p = key;
-    unsigned int c;
+    int c;
     GtTrieNode** rover = &trie->root;
     GtTrieNode* node = gt_trie_node_find(trie, key);
     if(!node) return GT_ERROR_EMPTY;
@@ -121,7 +123,8 @@ int gt_trie_remove(GtTrie* trie, char* key){
             free(*rover);
             *rover = NULL;
         }
-        c = (unsigned int)*p;
+        c = (int)*p;
+        c += 127;
         if(*p=='\0') break;
         rover = &(*rover)->nodes[c];
         p++;
@@ -158,11 +161,12 @@ void gt_trie_travel(GtTrie* trie,
                     void(*traveller)(GtValue),
                     unsigned int depth){
     char* p = key;
-    unsigned int c;
+    int c;
     GtTrieNode* node = trie->root;
     if(!node) return;
     while(*p!='\0'){
-        c = (unsigned int) *p;
+        c = (int) *p;
+        c += 127;
         node = node->nodes[c];
         if(!node) return;
         depth--;

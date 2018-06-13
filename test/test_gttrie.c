@@ -2,16 +2,32 @@
 // Created by rowland on 18-3-14.
 //
 #include <criterion/criterion.h>
+#include <stdio.h>
 #include "../include/gttypes.h"
 #include "../include/gttrie.h"
 
 GtTrie* gtTrie = NULL;
 char* dict[] = {
-        "Doe", "a deer, a female deer",
-        "Ray", "a drop of golden sun",
-        "Me", "a name I call myself",
-        "Far", "a long, long way to run",
+        "哆", "a deer, a female deer",
+        "唻", "a drop of golden sun",
+        "咪", "a name I call myself",
+        "发", "a long, long way to run",
 };
+
+char *to_ascii(const char *inputstring) {
+    // allocate the maximum needed to store the ascii represention:
+    char *output = malloc(sizeof(char) * (strlen(inputstring) * 4 + 1));
+    char *output_end = output;
+    if (!output) // allocation failed! omg!
+        exit(EXIT_FAILURE);
+    *output_end = '\0';
+    for (; *inputstring; ++inputstring) {
+        output_end += sprintf(output_end, "%u ", *inputstring);
+        //assert(output_end == '\0');
+    }
+    return output;
+}
+
 void gttrie_setup(void){
     gtTrie = gt_trie_create();
 }
@@ -29,9 +45,8 @@ Test(GtTrie, insert_search){
         err = gt_trie_insert(gtTrie, dict[i], dict[i+1]);
         cr_expect_eq(err, GT_OK, "%d is expected while inserting but got %d", GT_OK, err);
     }
-
     GtValue var;
-    err = gt_trie_find(gtTrie, "Far", &var);
+    err = gt_trie_find(gtTrie, "咪", &var);
     cr_expect_eq(err, GT_OK, "%d is expected while inserting but got %d", GT_OK, err);
     cr_assert(!strcmp("a long, long way to run", (char*)var),
               "\"a long, long way to run\" is expected but got \"%s\"", (char*)var);

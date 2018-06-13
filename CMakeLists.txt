@@ -23,9 +23,10 @@ find_library(UNITTEST criterion)
 
 #如果成功获取criterion说明机器是安装了criterion
 if (UNITTEST_FOUND)
+    set(CMAKE_BUILD_TYPE Debug)
     enable_testing()
     #设置单元测试的源码目录
-    set(UNITTEST_SOURCE test/test_gtstack.c test/test_gttrie.c)
+    set(UNITTEST_SOURCE  test/test_gttrie.c)
     #打印一些信息 提示用户在make之后执行make test就是单元测试
     message("-- be ready to run test case, usage: make && make test")
     #把所有的测试源码编译成可执行文件runtest
