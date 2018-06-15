@@ -13,7 +13,7 @@ extern "C" {
 typedef struct GtTrie GtTrie;
 
 
-GT_API GtTrie* gt_trie_create();
+GT_API GtTrie* gt_trie_create(void);
 GT_API long gt_trie_counts(GtTrie* trie);
 GT_API int gt_trie_find(GtTrie* trie, char* key, GtValue* value);
 GT_API int gt_trie_insert(GtTrie* trie, char* key, GtValue value);
