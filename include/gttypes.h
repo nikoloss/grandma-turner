@@ -10,12 +10,16 @@ extern "C" {
 #endif
 
 #define GT_API            extern
-#define GT_OK             (0)
-#define GT_ERROR_OUTMEM   (-1)
-#define GT_ERROR_FULL     (-2)
-#define GT_ERROR_EMPTY    (-3)
-
 #define GTMAXCHAR         (2<<7)
+
+typedef enum {
+    GT_STATUS_OK,
+    GT_STATUS_OUTMEN,
+    GT_STATUS_FULL,
+    GT_STATUS_EMPTY,
+    GT_STATUS_NULL,
+    GT_STATUS_OVER_INDEX,
+} GT_STATUS;
 
 
 typedef void* GtValue;

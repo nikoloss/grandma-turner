@@ -20,7 +20,7 @@ struct GtTrie{
 
 GtTrie* gt_trie_create(){
     GtTrie* out = (GtTrie*)malloc(sizeof(GtTrie));
-    if(!out) exit(GT_ERROR_OUTMEM);
+    if(!out) exit(GT_STATUS_OUTMEN);
 
     out->counts=0; out->root = NULL;
     return out;
@@ -54,21 +54,21 @@ static GtTrieNode* gt_trie_node_find(GtTrie* trie, char* key){
  * 第一层的节点是a，但是a这个节点并没有实际数值，包括a的子节点b，层层递进
  * 到d的时候才有数据
  */
-int gt_trie_find(GtTrie* trie, char* key, GtValue* value){
+GT_STATUS gt_trie_find(GtTrie* trie, char* key, GtValue* value){
     GtTrieNode* node = gt_trie_node_find(trie, key);
     if(node&&node->data){
         *value = node->data;
-        return GT_OK;
+        return GT_STATUS_OK;
     }
-    return GT_ERROR_EMPTY;
+    return GT_STATUS_EMPTY;
 }
 
 /*
  * 插入就是根据key字符层层递进下去直到key结尾，此时把value更新到节点的
  * 数据域
  */
-int gt_trie_insert(GtTrie* trie, char* key, GtValue value){
-    if(!value) return GT_ERROR_EMPTY;
+GT_STATUS gt_trie_insert(GtTrie* trie, char* key, GtValue value){
+    if(!value) return GT_STATUS_EMPTY;
 
     char* p = key;
     int c;
@@ -78,14 +78,14 @@ int gt_trie_insert(GtTrie* trie, char* key, GtValue value){
     if(node){
         //这么做主要是为了更新重复的节点又不增加引用计数器
         node->data = value;
-        return GT_OK;
+        return GT_STATUS_OK;
     }
     trie->counts++;
 
     for(;;){
         if(!(*rover)){
             node = (GtTrieNode*)malloc(sizeof(GtTrieNode));
-            if(!node) exit(GT_ERROR_OUTMEM);
+            if(!node) exit(GT_STATUS_OUTMEN);
             node->ref = 0; node->data = NULL;
             *rover = node;
         }
@@ -100,7 +100,7 @@ int gt_trie_insert(GtTrie* trie, char* key, GtValue value){
         rover = &(*rover)->nodes[c];
         p++;
     }
-    return GT_OK;
+    return GT_STATUS_OK;
 }
 
 /*
@@ -111,12 +111,12 @@ int gt_trie_insert(GtTrie* trie, char* key, GtValue value){
  * 并把引用计数器为0的free掉。这里也显示出c/c++对内存
  * 外科手术刀式的精准操作，真是魅力无穷呀
  */
-int gt_trie_remove(GtTrie* trie, char* key){
+GT_STATUS gt_trie_remove(GtTrie* trie, char* key){
     char* p = key;
     int c;
     GtTrieNode** rover = &trie->root;
     GtTrieNode* node = gt_trie_node_find(trie, key);
-    if(!node) return GT_ERROR_EMPTY;
+    if(!node) return GT_STATUS_EMPTY;
     trie->counts--;
     for(;;){
         if(--(*rover)->ref==0){
@@ -129,7 +129,7 @@ int gt_trie_remove(GtTrie* trie, char* key){
         rover = &(*rover)->nodes[c];
         p++;
     }
-    return GT_OK;
+    return GT_STATUS_OK;
 }
 
 /*
