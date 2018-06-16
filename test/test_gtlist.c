@@ -43,12 +43,12 @@ Test(GtList, storge){
     cr_expect(!strcmp("apple", val), "shit happened here!");
     gt_list_remove(gtList, 0, &val); //orange pear lemon
     cr_expect(!strcmp("banana", val), "shit happened here!");
-//    gt_list_remove(gtList, 2, &val); //orange pear
-//    cr_expect(!strcmp("lemon", val), "shit happened here!");
-//    gt_list_remove(gtList, 1, &val); //orange
-//    cr_expect(!strcmp("pear", val), "shit happened here!");
-//    gt_list_remove(gtList, 0, &val); //
-//    cr_expect(!strcmp("orange", val), "shit happened here!");
-//    size = gt_list_size(gtList);
-//    cr_expect_eq(size, 0, "expected list size 0 but got %d", size);
+    gt_list_remove(gtList, 2, &val); //orange pear
+    cr_expect(!strcmp("lemon", val), "shit happened here!");
+    gt_list_remove(gtList, 1, &val); //orange
+    cr_expect(!strcmp("pear", val), "shit happened here!");
+    gt_list_remove(gtList, 0, &val); //
+    cr_expect(!strcmp("orange", val), "shit happened here!");
+    size = gt_list_size(gtList);
+    cr_expect_eq(size, 0, "expected list size 0 but got %d", size);
 }

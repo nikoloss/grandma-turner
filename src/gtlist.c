@@ -119,5 +119,6 @@ void gt_list_destroy(GtList** in){
             entry = next;
         }
         free(gtList);
+        *in = NULL;
     }
 }
