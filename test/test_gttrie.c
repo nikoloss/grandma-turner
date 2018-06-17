@@ -26,7 +26,7 @@ TestSuite(GtTrie, .init=gttrie_setup, .fini=gttrie_teardown);
 
 Test(GtTrie, insert_search){
     cr_expect_eq(gt_trie_counts(gtTrie), 0, "0 is expected");
-    GT_STATUS err;
+    gt_status err;
     for(int i=0;i<8;i=i+2){
         err = gt_trie_insert(gtTrie, dict[i], dict[i+1]);
         cr_expect_eq(err, GT_STATUS_OK, "%d is expected while inserting but got %d", GT_STATUS_OK, err);

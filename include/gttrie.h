@@ -15,9 +15,9 @@ typedef struct GtTrie GtTrie;
 
 GT_API GtTrie* gt_trie_create(void);
 GT_API long gt_trie_counts(GtTrie* trie);
-GT_API GT_STATUS gt_trie_find(GtTrie* trie, char* key, GtValue* value);
-GT_API GT_STATUS gt_trie_insert(GtTrie* trie, char* key, GtValue value);
-GT_API GT_STATUS gt_trie_remove(GtTrie* trie, char* key);
+GT_API gt_status gt_trie_find(GtTrie* trie, char* key, GtValue* value);
+GT_API gt_status gt_trie_insert(GtTrie* trie, char* key, GtValue value);
+GT_API gt_status gt_trie_remove(GtTrie* trie, char* key);
 GT_API void gt_trie_travel(GtTrie* trie, char* key, void(*traveller)(GtValue), unsigned int depth);
 GT_API void gt_trie_destroy(GtTrie** trie);
 

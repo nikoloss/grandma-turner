@@ -24,7 +24,7 @@ Test(GtStack, initialized){
 
 Test(GtStack, counts){
     cr_assert_eq(gt_stack_counts(gtStack), 0, "counts");
-    GT_STATUS err;
+    gt_status err;
     err = gt_stack_push(gtStack, "托尔斯泰");
     cr_assert_eq(gt_stack_counts(gtStack), 1, "counts");
     err = gt_stack_push(gtStack, "甘地");
@@ -35,7 +35,7 @@ Test(GtStack, counts){
 
 Test(GtStack, overflow){
     cr_assert_eq(gt_stack_counts(gtStack), 0, "counts");
-    GT_STATUS err;
+    gt_status err;
     char* vars[] = {"today","is","a"};
     for(int i=0;i<3;i++){
         gt_stack_push(gtStack, vars[i]);
@@ -47,7 +47,7 @@ Test(GtStack, overflow){
 
 Test(GtStack, empty){
     cr_assert_eq(gt_stack_counts(gtStack), 0, "counts");
-    GT_STATUS err;
+    gt_status err;
     cr_expect_eq(gt_stack_counts(gtStack), 0, "0 is expected");
     GtValue var;
     err = gt_stack_pop(gtStack, &var);
@@ -56,7 +56,7 @@ Test(GtStack, empty){
 
 Test(GtStack, store){
     cr_assert_eq(gt_stack_counts(gtStack), 0, "counts");
-    GT_STATUS err;
+    gt_status err;
     GtValue var;
     char* vars[] = {"today", "is", "sunny"};
     for(int i=0;i<3;i++){

@@ -9,8 +9,12 @@
 extern "C" {
 #endif
 
-#define GT_API            extern
-#define GTMAXCHAR         (2<<7)
+#define GT_API         extern
+#define GTMAXCHAR      (2<<7)
+#define GT_TRUE        (1)
+#define GT_FALSE       (0)
+
+typedef int GT_BOOL;
 
 typedef enum {
     GT_STATUS_OK,
@@ -19,7 +23,7 @@ typedef enum {
     GT_STATUS_EMPTY,
     GT_STATUS_NULL,
     GT_STATUS_OVER_INDEX,
-} GT_STATUS;
+} gt_status;
 
 
 typedef void* GtValue;

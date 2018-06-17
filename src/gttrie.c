@@ -54,7 +54,7 @@ static GtTrieNode* gt_trie_node_find(GtTrie* trie, char* key){
  * 第一层的节点是a，但是a这个节点并没有实际数值，包括a的子节点b，层层递进
  * 到d的时候才有数据
  */
-GT_STATUS gt_trie_find(GtTrie* trie, char* key, GtValue* value){
+gt_status gt_trie_find(GtTrie* trie, char* key, GtValue* value){
     GtTrieNode* node = gt_trie_node_find(trie, key);
     if(node&&node->data){
         *value = node->data;
@@ -67,7 +67,7 @@ GT_STATUS gt_trie_find(GtTrie* trie, char* key, GtValue* value){
  * 插入就是根据key字符层层递进下去直到key结尾，此时把value更新到节点的
  * 数据域
  */
-GT_STATUS gt_trie_insert(GtTrie* trie, char* key, GtValue value){
+gt_status gt_trie_insert(GtTrie* trie, char* key, GtValue value){
     if(!value) return GT_STATUS_EMPTY;
 
     char* p = key;
@@ -111,7 +111,7 @@ GT_STATUS gt_trie_insert(GtTrie* trie, char* key, GtValue value){
  * 并把引用计数器为0的free掉。这里也显示出c/c++对内存
  * 外科手术刀式的精准操作，真是魅力无穷呀
  */
-GT_STATUS gt_trie_remove(GtTrie* trie, char* key){
+gt_status gt_trie_remove(GtTrie* trie, char* key){
     char* p = key;
     int c;
     GtTrieNode** rover = &trie->root;

@@ -4,6 +4,7 @@
 .idea
 *-debug
 *.o
+main.c
 *~
 build/*
 .DS_Store
