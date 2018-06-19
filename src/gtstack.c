@@ -27,6 +27,7 @@ int gt_stack_counts(GtStack* in){
 }
 
 gt_status gt_stack_push(GtStack* in, GtValue data){
+    if(!in) return GT_STATUS_NULL;
     if(in->index>=in->max) return GT_STATUS_FULL;
 
     in->elems[in->index++] = data;
@@ -34,13 +35,14 @@ gt_status gt_stack_push(GtStack* in, GtValue data){
 }
 
 gt_status gt_stack_pop(GtStack* in, GtValue* data){
+    if(!in) return GT_STATUS_NULL;
     if(in->index<=0) return GT_STATUS_EMPTY;
-
-    *data = in->elems[--in->index];
+    if(data) *data = in->elems[--in->index];
     return GT_STATUS_OK;
 }
 
 gt_status gt_stack_clear(GtStack* in){
+    if(!in) return GT_STATUS_NULL;
     in->index = 0;
     return GT_STATUS_OK;
 }
