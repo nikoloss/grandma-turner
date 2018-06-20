@@ -27,6 +27,7 @@ GtTrie* gt_trie_create(){
 }
 
 long gt_trie_counts(GtTrie* trie){
+    if(!trie) return 0;
     return trie->counts;
 }
 
@@ -55,6 +56,7 @@ static GtTrieNode* gt_trie_node_find(GtTrie* trie, char* key){
  * 到d的时候才有数据
  */
 gt_status gt_trie_find(GtTrie* trie, char* key, GtValue* value){
+    if(!trie) return GT_STATUS_NULL;
     GtTrieNode* node = gt_trie_node_find(trie, key);
     if(node&&node->data){
         *value = node->data;
@@ -68,6 +70,7 @@ gt_status gt_trie_find(GtTrie* trie, char* key, GtValue* value){
  * 数据域
  */
 gt_status gt_trie_insert(GtTrie* trie, char* key, GtValue value){
+    if(!trie) return GT_STATUS_NULL;
     if(!value) return GT_STATUS_EMPTY;
 
     char* p = key;
@@ -112,6 +115,7 @@ gt_status gt_trie_insert(GtTrie* trie, char* key, GtValue value){
  * 外科手术刀式的精准操作，真是魅力无穷呀
  */
 gt_status gt_trie_remove(GtTrie* trie, char* key){
+    if(!trie) return GT_STATUS_NULL;
     char* p = key;
     int c;
     GtTrieNode** rover = &trie->root;
