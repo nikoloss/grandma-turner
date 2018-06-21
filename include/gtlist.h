@@ -1,5 +1,5 @@
 //
-// Created by 罗然 on 2018/6/16.
+// Created by Rowland on 2018/6/16.
 //
 
 #ifndef GTLIB_GTLIST_H
