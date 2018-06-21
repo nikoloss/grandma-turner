@@ -1,5 +1,5 @@
 //
-// Created by 罗然 on 2018/6/16.
+// Created by Rowland on 2018/6/16.
 //
 #include "../include/gtlist.h"
 #include <stdlib.h>
