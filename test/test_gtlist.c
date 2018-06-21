@@ -2,6 +2,7 @@
 // Created by Rowland on 2018/6/16.
 //
 #include <criterion/criterion.h>
+#include <stdio.h>
 #include "../include/gttypes.h"
 #include "../include/gtlist.h"
 
@@ -44,6 +45,18 @@ Test(GtList, storge){
     cr_expect(!strcmp("orange", val), "shit happened here!");
     size = gt_list_size(gtList);
     cr_expect_eq(size, 5, "expected list size 0 but got %d", size);
+    gt_list_insert(gtList, 0, "cherry");
+    // cherry, apple, banana, orange, pear, lemon
+    gt_list_insert(gtList, 4, "mango");
+    // cherry, apple, banana, orange, mango, pear, lemon
+    char* data_set[] = {
+            "cherry", "apple", "banana", "orange", "mango", "pear", "lemon"
+    };
+    for(int i=0;i<7;i++){
+        gt_list_get(gtList, i, &val);
+//        cr_log(CR_LOG_WARNING, "%s", (char*)val);
+        cr_expect(!strcmp(data_set[i], val), "shit happened here!");
+    }
 }
 
 Test(GtList, visit){
