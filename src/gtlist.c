@@ -97,6 +97,7 @@ static void gt_entry_remove(GtListEntry** entryAddress){
     free(entry);
 }
 
+// Would use "append" instead if index is a negative value
 gt_status gt_list_insert(GtList *in, int index, GtValue value) {
     if (!in||!value) return GT_STATUS_NULL;
     GtListEntry *newEntry = (GtListEntry *) malloc(sizeof(GtListEntry));
@@ -107,9 +108,11 @@ gt_status gt_list_insert(GtList *in, int index, GtValue value) {
 
     GtListEntry** entry = &in->entry;
     if (index<0){
+        //如果是负数，直接追加至末尾
         gt_entry_append(entry, newEntry);
         return GT_STATUS_OK;
     }
+    //遍历步长
     while ((*entry)->next) {
         if(index==0) break;
         index--;
