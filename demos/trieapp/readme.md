@@ -2,7 +2,7 @@
 ##### This is a dictionary function using trie data structure:
 ```bash
 $/> cd app/trieapp
-$/> clang main.c `pkg-config --cflags --libs gtlib`
+$/> clang dict.c `pkg-config --cflags --libs gtlib`
 $/> ./a.out data.txt
 LOOK FOR? /> di
 Not found but I have 3 candidates
