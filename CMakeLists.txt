@@ -11,7 +11,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         SOVERSION 0.0.1
         PUBLIC_HEADER "${HEADER_FILES}"
 	)
-#add_executable(gtexe ${HEADER_FILES} ${SOURCE_FILES})
+#add_executable(gtexe main.c ${HEADER_FILES} ${SOURCE_FILES})
 configure_file(gtlib.pc.in gtlib.pc @ONLY)
 install(TARGETS gtlib
         LIBRARY DESTINATION lib
