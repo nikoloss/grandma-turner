@@ -9,8 +9,6 @@
 #define INIT_SIZE        (16)
 #define MAX_DENSITY      (0.75)
 
-typedef void* pv;
-
 typedef struct GtElement{
     enum {UNUSED=0, USED} used; //逻辑删除
     enum {ORIGIN=0, LIST} listified; //冲突的时候退化为链表
@@ -50,8 +48,21 @@ static gt_status gt_hash_element_put(GtHashmap* gtHashmap, char* key, GtValue va
     unsigned int index = gtHashmap->hashing(key)%gtHashmap->size;
     GtElement* elems = gtHashmap->elems;
     GtElement* hover = elems+index;
-    //冲突
-    if(hover->used){
+    if(!hover->used){
+        //没有冲突就简单了……
+        hover->key = key;
+        hover->value = value;
+        hover->used = USED;
+        hover->listified = ORIGIN;
+    }else{
+        //比较key
+        if(!strcmp(hover->key, key)){
+            //覆盖
+            hover->key = key;
+            hover->value = value;
+            return GT_STATUS_OK;
+        }
+        //冲突
         GtElement* new_ele = malloc(sizeof(GtElement));
         if(!new_ele) return GT_STATUS_OUTMEN;
         new_ele->used =USED;
@@ -62,13 +73,13 @@ static gt_status gt_hash_element_put(GtHashmap* gtHashmap, char* key, GtValue va
             //如果是链表得先遍历链表确保元素
             GtList* list = hover->list;
             GtListIter* iter = gt_list_iterator_create(list);
-            if(!iter) return GT_STATUS_OUTMEN;
-            GtElement* elem;
+            GtElement* temp;
             while(gt_list_iterator_has_next(iter)){
-                gt_list_iterator_next(iter, (GtValue*)&elem);
-                if(!strcmp(key, elem->key)){
+                gt_list_iterator_next(iter, (GtValue*)&temp);
+                if(!strcmp(key, temp->key)){
                     //如果找到就删除
                     gt_list_iterator_remove(iter);
+                    free(temp);
                     gtHashmap->counts--;
                     break;
                 }
@@ -92,12 +103,6 @@ static gt_status gt_hash_element_put(GtHashmap* gtHashmap, char* key, GtValue va
             hover->list = list;
             hover->listified = LIST;
         }
-    }else{
-        //没有冲突就简单了……
-        hover->key = key;
-        hover->value = value;
-        hover->used = USED;
-        hover->listified = ORIGIN;
     }
     gtHashmap->counts++;
     return GT_STATUS_OK;
@@ -111,10 +116,11 @@ static gt_status gt_rehash(GtHashmap *in){
     if(!new_elems) return GT_STATUS_OUTMEN;
 
     GtElement* hover;
-    gt_status error;
+    gt_status error = GT_STATUS_OK;
     in->size = new_size;
+    in->counts = 0;
     in->elems = new_elems;
-    for(int i=0;i<old_size;i++){
+    for(unsigned int i=0;i<old_size;i++){
         GtElement old_ele = old_elems[i];
         if(!old_ele.used) continue;
         if(old_ele.listified){
@@ -135,7 +141,7 @@ static gt_status gt_rehash(GtHashmap *in){
     return error;
 }
 
-GtHashmap* gt_hashmap_create(unsigned int (*hash_func)(char* k)){
+GtHashmap* gt_hashmap_create(unsigned int (*hash_func)(char*)){
     GtHashmap* out = malloc(sizeof(GtHashmap));
     if(!out){
         exit(GT_STATUS_OUTMEN);
@@ -158,9 +164,9 @@ GtHashmap* gt_hashmap_create(unsigned int (*hash_func)(char* k)){
 }
 
 unsigned int gt_hashmap_counts(GtHashmap *gtHashmap){
-    int counts = 0;
+    unsigned int counts = 0;
     if(gtHashmap){
-        counts = gtHashmap->size;
+        counts = gtHashmap->counts;
     }
     return counts;
 }
@@ -185,6 +191,7 @@ gt_status gt_hashmap_get(GtHashmap* gtHashmap, char* key, GtValue *value){
     if(!hover->used) return GT_STATUS_NULL;
 
     //如果是链表则需要遍历比较key
+    gt_status error = GT_STATUS_NULL;
     if(hover->listified){
         GtList* list = hover->list;
         GtListIter* iter = gt_list_iterator_create(list);
@@ -194,14 +201,16 @@ gt_status gt_hashmap_get(GtHashmap* gtHashmap, char* key, GtValue *value){
             if(!strcmp(temp->key, key)){
                 //hit!
                 if(value) *value = temp->value;
-                return GT_STATUS_OK;
+                error = GT_STATUS_OK;
+                break;
             }
         }
-        return GT_STATUS_NULL;
+        gt_list_iterator_destroy(&iter);
     }else{
         if(value) *value = hover->value;
-        return GT_STATUS_OK;
+        error = GT_STATUS_OK;
     }
+    return error;
 }
 
 gt_status gt_hashmap_remove(GtHashmap* gtHashmap, char* key){
@@ -213,6 +222,84 @@ gt_status gt_hashmap_remove(GtHashmap* gtHashmap, char* key){
 
     //如果是链表需要遍历比较key，找到了就删除
     if(hover->listified){
+        GtList* list = hover->list;
+        GtListIter* iter = gt_list_iterator_create(list);
 
+        GtElement* temp;
+        while(gt_list_iterator_has_next(iter)){
+            gt_list_iterator_next(iter, (GtValue*)&temp);
+            if(!strcmp(temp->key, key)){
+                gt_list_iterator_remove(iter);
+                free(temp);
+                break;
+            }
+        }
+        gt_list_iterator_destroy(&iter);
+        //这里容易忽略的一个细节这里如果list已经只有一个元素了
+        //需要把这个list提升为value，free掉list
+        if(1==gt_list_size(list)){
+            gt_list_get(list, 0, (GtValue*)&temp);
+            hover->key = temp->key;
+            hover->value = temp->value;
+            hover->listified = ORIGIN;
+            free(temp);
+            gt_list_destroy(&list);
+        }
+    }else{
+        //如果不是链表是普通元素，只修改used做逻辑删除
+        hover->used = UNUSED;
+    }
+    gtHashmap->counts--;
+    return GT_STATUS_OK;
+}
+
+void gt_hashmap_travel(GtHashmap* gtHashmap, GT_BOOL(*traveller)(char*, GtValue)){
+    if(!gtHashmap) return;
+
+    GtElement *hover, *temp;
+    GT_BOOL go_on = GT_TRUE;
+    for(unsigned int i=0;i<gtHashmap->size&&go_on;i++){
+        hover = gtHashmap->elems + i;
+        if(!hover->used)continue;
+        if(hover->listified){
+            GtList* list = hover->list;
+            GtListIter* iter = gt_list_iterator_create(list);
+            while (gt_list_iterator_has_next(iter)){
+                gt_list_iterator_next(iter, (GtValue*)&temp);
+                if(!traveller(temp->key, temp->value)) {
+                    go_on = GT_FALSE;
+                    break;
+                }
+            }
+            gt_list_iterator_destroy(&iter);
+        }else{
+            if(!traveller(hover->key, hover->value)){
+                go_on = GT_FALSE;
+            }
+        }
+    }
+}
+
+void gt_hashmap_destroy(GtHashmap** in){
+    if(*in){
+        GtHashmap* gtHashmap = *in;
+        GtElement* elems = gtHashmap->elems;
+        GtElement *hover, *temp;
+        for(unsigned int i=0;i<gtHashmap->size;i++){
+            hover = elems + i;
+            if(!hover->used) continue;
+            if(hover->listified){
+                GtListIter* iter = gt_list_iterator_create(hover->list);
+                while(gt_list_iterator_has_next(iter)){
+                    gt_list_iterator_next(iter, (GtValue*)&temp);
+                    free(temp);
+                }
+                gt_list_iterator_destroy(&iter);
+                gt_list_destroy(&hover->list);
+            }
+        }
+        free(elems);
+        free(gtHashmap);
+        *in = NULL;
     }
 }

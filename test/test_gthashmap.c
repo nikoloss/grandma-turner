@@ -18,6 +18,7 @@ void gthashmap_teardown(void){
 TestSuite(GtHashmap, .init=gthashmap_setup, .fini=gthashmap_teardown);
 
 Test(GtHashmap, storge){
+
     gt_hashmap_put(gtHashmap, "周一", "Mon");
     gt_hashmap_put(gtHashmap, "周二", "Tues");
     gt_hashmap_put(gtHashmap, "周三", "Wed");
@@ -43,7 +44,7 @@ Test(GtHashmap, storge){
 }
 
 GT_BOOL hashmap_visit(char* key, GtValue gtValue){
-    cr_log(CR_LOG_WARNING, "\t\"%s\":\"%s\"", key, gtValue);
+    cr_log_warn("\t\"%s\":\"%s\"", key, (char*)gtValue);
     if(!strcmp(key, "周一")){
         cr_expect(!strcmp(gtValue, "Mon"), "shit happened here!");
     }else if(!strcmp(key, "周二")){
@@ -59,6 +60,7 @@ GT_BOOL hashmap_visit(char* key, GtValue gtValue){
     }else if(!strcmp(key, "周日")){
         cr_expect(!strcmp(gtValue, "Sun"), "shit happened here!");
     }
+    return GT_TRUE;
 }
 
 Test(GtHashmap, visit){
@@ -76,7 +78,7 @@ Test(GtHashmap, visit){
     }
     unsigned int size = gt_hashmap_counts(gtHashmap);
     cr_expect_eq(size, 7, "size 7 is expected but got %u", size);
-    cr_log(CR_LOG_WARNING, "{");
+    cr_log_warn("{");
     gt_hashmap_travel(gtHashmap, hashmap_visit);
-    cr_log(CR_LOG_WARNING, "}");
+    cr_log_warn("}");
 }
