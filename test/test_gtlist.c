@@ -2,7 +2,6 @@
 // Created by Rowland on 2018/6/16.
 //
 #include <criterion/criterion.h>
-#include <stdio.h>
 #include "../include/gttypes.h"
 #include "../include/gtlist.h"
 

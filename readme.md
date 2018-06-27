@@ -25,10 +25,10 @@ int main(){
     gt_stack_push(stack, "韵达");
     gt_stack_push(stack, "申通");
     gt_stack_push(stack, "圆通");
-    char* p;
+    GtValue p;
     int err;
-    while((err=gt_stack_pop(stack, (void**)&p))==GT_OK){
-        printf("pop:%s\n", p);
+    while((err=gt_stack_pop(stack, &p))==GT_STATUS_OK){
+        printf("pop:%s\n", (char*)p);
     }
     gt_stack_destroy(&stack);
     return EXIT_SUCCESS;
@@ -41,4 +41,4 @@ $ />clang main.c `pkg-config --cflags --libs gtlib`
 
 
 ### Demo app
-[Dictionary](./app/trieapp/readme.md)
+[Dictionary](.demos/trieapp/readme.md)
