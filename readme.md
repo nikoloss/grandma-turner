@@ -1,5 +1,5 @@
 # Your Grandma's Turner
-If it rains today, something something remain
+if on Saint swithins' day,it doth rain,something something，something remain
 
 
 ### How to use
