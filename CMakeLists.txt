@@ -21,7 +21,6 @@ install(FILES ${CMAKE_BINARY_DIR}/gtlib.pc
         DESTINATION lib/pkgconfig)
 
 #通过pkg-config获得criterion
-#find_library(UNITTEST criterion)
 find_package(PkgConfig)
 pkg_check_modules(UNITTEST criterion)
 
