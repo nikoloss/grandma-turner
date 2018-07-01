@@ -24,7 +24,6 @@ install(FILES ${CMAKE_BINARY_DIR}/gtlib.pc
 find_package(PkgConfig)
 pkg_check_modules(UNITTEST criterion)
 
-
 #如果成功获取criterion说明机器是安装了criterion
 if (UNITTEST_FOUND)
     set(CMAKE_BUILD_TYPE Debug)
