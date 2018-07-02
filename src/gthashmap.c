@@ -27,7 +27,7 @@ struct GtHashmap{
     GtElement* elems;
 };
 
-static unsigned int hashing(char *key)
+static unsigned int gt_origin_hashing(char *key)
 {
     unsigned int result = 193;
     char* p = key;
@@ -156,7 +156,7 @@ GtHashmap* gt_hashmap_create(unsigned int (*hash_func)(char*)){
     if(hash_func) {
         out->hashing = hash_func;
     }else{
-        out->hashing = hashing;
+        out->hashing = gt_origin_hashing;
     }
     out->size = INIT_SIZE;
     out->counts = 0;
