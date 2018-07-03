@@ -26,7 +26,7 @@ pkg_check_modules(UNITTEST criterion)
 
 #如果成功获取criterion说明机器是安装了criterion
 if (UNITTEST_FOUND)
-    set(CMAKE_BUILD_TYPE Debug)
+#    set(CMAKE_BUILD_TYPE Debug)
     enable_testing()
     #设置单元测试的源码目录
     set(UNITTEST_SOURCE  test/test_gttrie.c test/test_gtstack.c test/test_gtlist.c include/gthashmap.h src/gthashmap.c test/test_gthashmap.c)
