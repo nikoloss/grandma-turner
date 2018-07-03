@@ -36,5 +36,6 @@ if (UNITTEST_FOUND)
     add_executable(runtest ${UNITTEST_SOURCE} ${HEADER_FILES} ${SOURCE_FILES})
     #执行runtest需要criterion库依赖
     target_link_libraries(runtest ${UNITTEST_LIBRARIES})
-    add_test(runtest runtest)
+    add_test(runtest runtest --verbose=0)
+    set(ENV{CTEST_OUTPUT_ON_FAILURE} 0)
 endif (UNITTEST_FOUND)
