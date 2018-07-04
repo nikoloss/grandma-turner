@@ -164,6 +164,7 @@ void gt_trie_travel(GtTrie* trie,
                     char* key,
                     void(*traveller)(GtValue),
                     unsigned int depth){
+    if(!trie) return;
     char* p = key;
     int c;
     GtTrieNode* node = trie->root;
