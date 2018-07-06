@@ -24,12 +24,11 @@ Test(GtStack, initialized){
 
 Test(GtStack, counts){
     cr_assert_eq(gt_stack_counts(gtStack), 0, "counts");
-    gt_status err;
-    err = gt_stack_push(gtStack, "托尔斯泰");
+    gt_stack_push(gtStack, "托尔斯泰");
     cr_assert_eq(gt_stack_counts(gtStack), 1, "counts");
-    err = gt_stack_push(gtStack, "甘地");
+    gt_stack_push(gtStack, "甘地");
     cr_assert_eq(gt_stack_counts(gtStack), 2, "counts");
-    err = gt_stack_push(gtStack, "泰勒");
+    gt_stack_push(gtStack, "泰勒");
     cr_assert_eq(gt_stack_counts(gtStack), 3, "counts");
 }
 
