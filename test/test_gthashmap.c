@@ -45,7 +45,6 @@ Test(GtHashmap, storge){
 }
 
 GT_BOOL hashmap_visit(char* key, GtValue gtValue){
-//    cr_log_info("\t\"%s\":\"%s\"", key, (char*)gtValue);
     if(!strcmp(key, "周一")){
         cr_expect(!strcmp(gtValue, "Mon"), "shit happened here!");
     }else if(!strcmp(key, "周二")){
@@ -79,7 +78,5 @@ Test(GtHashmap, visit){
     }
     unsigned int size = gt_hashmap_counts(gtHashmap);
     cr_expect_eq(size, 7, "size 7 is expected but got %u", size);
-//    cr_log_warn("{");
     gt_hashmap_travel(gtHashmap, hashmap_visit);
-//    cr_log_warn("}");
 }
