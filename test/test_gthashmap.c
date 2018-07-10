@@ -9,7 +9,6 @@ GtHashmap* gtHashmap = NULL;
 
 void gthashmap_setup(void){
     gtHashmap = gt_hashmap_create(NULL);
-
 }
 
 void gthashmap_teardown(void){
