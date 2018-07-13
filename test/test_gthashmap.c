@@ -72,9 +72,8 @@ Test(GtHashmap, visit){
             "周六", "Sat",
             "周日", "Sun"
     };
-    for(int i=0;i<7;i++){
+    for(int i=0;i<7;i++)
         gt_hashmap_put(gtHashmap, data_set[i*2], data_set[i*2+1]);
-    }
     unsigned int size = gt_hashmap_counts(gtHashmap);
     cr_expect_eq(size, 7, "size 7 is expected but got %u", size);
     gt_hashmap_travel(gtHashmap, hashmap_visit);
