@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.7)
-set(CMAKE_C_FLAGS "${CMAKE_ENABLE_C99}")
+set(CMAKE_C_FLAGS "${CMAKE_ENABLE_C99} -Wall ${CMAKE_WARN_DEPRECATED} ")
 set(SOURCE_FILES src/gtstack.c src/gttrie.c src/gtlist.c src/gthashmap.c)
 set(HEADER_FILES include/gtstack.h include/gttrie.h include/gttypes.h include/gtlist.h include/gthashmap.h)
 project(gtlib VERSION 0.0.1 LANGUAGES C)
