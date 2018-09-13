@@ -6,7 +6,8 @@ project(gtlib VERSION 0.0.1 LANGUAGES C)
 add_library(${PROJECT_NAME} SHARED
         src/gtstack.c
 		src/gttrie.c
-        src/gtlist.c)
+        src/gtlist.c
+        src/gthashmap.c)
 set_target_properties(${PROJECT_NAME} PROPERTIES
         SOVERSION 0.0.1
         PUBLIC_HEADER "${HEADER_FILES}"
