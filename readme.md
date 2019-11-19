@@ -1,6 +1,4 @@
 # Your Grandma's Turner
-if on St. Swithin's day, it doth rain, something something, something remain
-
 
 ### How to use
 #### Install in Linux & Mac:
