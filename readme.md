@@ -41,4 +41,4 @@ $ />clang main.c `pkg-config --cflags --libs gtlib`
 
 
 ### Demo app
-[Dictionary](demos/trieapp/readme.md)
+[Dictionary](demos/trieapp/)
